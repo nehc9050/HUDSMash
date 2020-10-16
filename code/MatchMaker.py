@@ -6,7 +6,7 @@ import Food
 
 class MatchMaker:
 
-    def __init__(self, foods, delta):
+    def __init__(self, foods, delta=150):
         if len(foods) % 2 != 0:
             raise Exception("Cannot match up an odd number of foods")
         
