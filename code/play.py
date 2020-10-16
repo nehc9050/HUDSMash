@@ -32,7 +32,7 @@ def main():
         try:
             win_index = int(input())
             matchup[win_index].beats(matchup[1-win_index])
-            print(f"{matchup[0].name} rating: {matchup[0].rating}\n{matchup[1].name} rating: {matchup[1].rating}\n")
+            print(f"{matchup[0].name} rating: {matchup[0].rating:.1f}\n{matchup[1].name} rating: {matchup[1].rating:.1f}\n")
             foods = matchups_to_foods(matchups)
         except:
             print("SOMETHING BROKE\n")
