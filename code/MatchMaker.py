@@ -5,15 +5,12 @@ import Food
 
 class Matchup:
 
-    foods = None
-    matchups = None
-
-
     def __init__(self, foods, delta):
         if len(foods) % 2 != 0:
             raise Exception("Cannot match up an odd number of foods")
             
         self.foods = foods
+        self.delta = delta
         self.match()
         
 
@@ -29,7 +26,7 @@ class Matchup:
             for j in range(len(foods_sorted)):
                 potential_matchups += [foods_sorted[j]]
 
-                if not math.fabs(food.rating - foods_sorted[j].rating) < delta:
+                if not math.fabs(food.rating - foods_sorted[j].rating) < self.delta:
                     break
             
             if len(potential_matchups) > 1:

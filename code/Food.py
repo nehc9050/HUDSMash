@@ -2,10 +2,6 @@ import elote as elo
 
 class Food:
 
-    elo_competitor = None
-    name = None
-    rating = None
-
     def __init__(self, name, elo_competitor=None):
         self.name = name
 
