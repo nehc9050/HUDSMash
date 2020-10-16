@@ -6,20 +6,28 @@ class Food:
     name = None
     rating = None
 
-    def __init__(self, elo_competitor, name):
-        self.elo_competitor = elo_competitor
+    def __init__(self, name, elo_competitor=None):
         self.name = name
-        self.rating = rating
+
+        if elo_competitor:
+            self.elo_competitor = elo_competitor
+            self.rating = elo_competitor.rating
 
 
-    def beats(self, other_food):
-        self.elo_competitor.beat(other_food.elo_competitor)
+    def beats(self, other):
+        if not self.elo_competitor or not other.elo_competitor:
+            raise Exception("Attempted contest with uninitialized competitor")
+
+        self.elo_competitor.beat(other.elo_competitor)
         self.rating = self.elo_competitor.rating
-        other_food.rating = other_food.elo_competitor.rating
-        return {self.name: self.rating, other_food.name: other_food.rating}
+        other.rating = other.elo_competitor.rating
+        return {self.name: self.rating, other.name: other.rating}
 
     
-    def win_prob_vs(self, other_food):
-        return self.elo_competitor.expected_score(other_food.elo_competitor)
+    def win_prob_vs(self, other):
+        if not self.elo_competitor or not other.elo_competitor:
+            raise Exception("Attempted calculation with uninitialized competitor")
+
+        return self.elo_competitor.expected_score(other.elo_competitor)
 
 
