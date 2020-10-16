@@ -18,7 +18,7 @@ def main():
         name = foods_file.readline()
         if not name:
             break
-        unrated_foods += [Food(name)]
+        unrated_foods += [Food(name.rstrip())]
     
     foods_file.close()
     foods = Initializer(unrated_foods).foods
