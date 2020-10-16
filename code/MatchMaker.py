@@ -24,7 +24,7 @@ class MatchMaker:
         foods_sorted = self.foods.copy()
         foods_sorted.sort(key=lambda x: x.rating)
 
-        while len(foods_sorted) > 0:
+        while foods_sorted:
             food = foods_sorted[0]
             potential_opponents = []
 
