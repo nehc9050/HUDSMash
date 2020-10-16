@@ -10,3 +10,6 @@ class Initializer:
             food.rating = food.elo_competitor.rating
 
         self.foods = foods
+
+    def __str__(self):
+        return f"{[food.__str__() for food in self.foods]}"

@@ -27,3 +27,7 @@ class Food:
         return self.elo_competitor.expected_score(other.elo_competitor)
 
 
+    def __str__(self):
+        return f"{(self.name, self.rating)}"
+
+

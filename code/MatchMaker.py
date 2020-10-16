@@ -1,14 +1,18 @@
 import elote as elo
+from Initializer import Initializer
 import random
 import math
 import Food
 
-class Matchup:
+class MatchMaker:
 
     def __init__(self, foods, delta):
         if len(foods) % 2 != 0:
             raise Exception("Cannot match up an odd number of foods")
-            
+        
+        if len(list(filter(lambda x: not x.rating, foods))) != 0:
+            foods = Initializer(foods).foods
+
         self.foods = foods
         self.delta = delta
         self.match()
@@ -17,27 +21,31 @@ class Matchup:
     def match(self):
         self.matchups = []
         
-        foods_sorted = self.foods.sort(key=lambda x: x.rating)
+        foods_sorted = self.foods.copy()
+        foods_sorted.sort(key=lambda x: x.rating)
 
-        while foods_sorted:
+        while len(foods_sorted) > 0:
             food = foods_sorted[0]
-            potential_matchups = []
+            potential_opponents = []
 
-            for j in range(len(foods_sorted)):
-                potential_matchups += [foods_sorted[j]]
+            for potential_opponent in foods_sorted[1:]:
+                potential_opponents += [potential_opponent]
 
-                if not math.fabs(food.rating - foods_sorted[j].rating) < self.delta:
+                if math.fabs(food.rating - potential_opponent.rating) >= self.delta:
                     break
             
-            if len(potential_matchups) > 1:
-                potential_matchups = potential_matchups[:-1]
+            if len(potential_opponents) > 1:
+                potential_opponents = potential_opponents[:-1]
 
-            opponent_index = random.randrange(len(potential_matchups))
-            opponent = potential_matchups[opponent_index]
+            opponent_index = random.randrange(len(potential_opponents))
+            opponent = potential_opponents[opponent_index]
             self.matchups += [[food, opponent]]
 
-            foods_sorted = foods_sorted[1:opponent_index] + foods_sorted[opponent_index+1:]
-                
+            foods_sorted = foods_sorted[1:opponent_index+1] + foods_sorted[opponent_index+2:]
+    
+
+    def __str__(self):
+        return f"{[(matchup[0].name, matchup[1].name) for matchup in self.matchups]}"
 
 
 
