@@ -20,6 +20,7 @@ def main():
             break
         unrated_foods += [Food(name)]
     
+    foods_file.close()
     foods = Initializer(unrated_foods).foods
 
     while True:
