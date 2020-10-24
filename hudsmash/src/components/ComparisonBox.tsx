@@ -1,7 +1,17 @@
 /** @jsx jsx */
 
 import React from 'react';
-import { jsx } from '@emotion/core';
+import { jsx, css } from '@emotion/core';
+
+// TODO: Skip current matchup
+
+interface IProps {
+}
+
+interface IState {
+  food1: foodObject;
+  food2: foodObject;
+}
 
 interface foodObject {
   name: string;
@@ -9,16 +19,102 @@ interface foodObject {
   elo: number;
 }
 
-export interface foodPair {
-  food1: foodObject;
-  food2: foodObject;
-}
+const comparisonBoxStyle = css`
+  .foods {
+    display: flex;
+    margin: 50px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .foodimg {
+    height: 200px;
+    width: auto;
+    margin: 15px;
+  }
+`;
 
-export function ComparisonBox(props: foodPair) {
-  return (
-    <React.Fragment>
-      <img src={props.food1.link} alt={props.food1.name}/>
-      <img src={props.food2.link} alt={props.food2.name}/>
-    </React.Fragment>
-  )
+export class ComparisonBox extends React.Component<{}, IState> {
+  async submitFood(winner: string, loser: string):Promise<any> {
+    await(fetch("http://localhost:5000/updateMatch", {
+      method:  'POST',
+      mode: 'cors',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({winner: winner, loser: loser}),
+    }));
+    // console.log(this.state);
+    // console.log(response);
+  };
+
+  async getMatch() {
+    try {
+      fetch("http://localhost:5000/getMatch").then(res => res.json()).then(data => {
+        this.setState({food1: data.food1, food2: data.food2});
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async componentDidMount() {
+    this.getMatch();
+  }
+
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      food1: {
+        name: '',
+        link: '',
+        elo: 500,
+      },
+      food2: {
+        name: '',
+        link: '',
+        elo: 500,
+      },
+    }
+  }
+
+  render() {
+    return (
+      <div css={comparisonBoxStyle}>
+        <div className="foods">
+          <div className="food">
+            <img
+              src={this.state.food1.link}
+              alt={this.state.food1.name}
+              className='foodimg'
+            />
+            <br/>
+            <button
+              onClick={(event: any) => {
+                this.submitFood(this.state.food1.name, this.state.food2.name)
+              }}
+            >
+              Choose {this.state.food1.name}
+            </button>
+          </div>
+          <div className="food">
+            <img
+              src={this.state.food2.link}
+              alt={this.state.food2.name}
+              className='foodimg'
+            />
+            <br/>
+            <button
+              onClick={(event: any) => {
+                this.submitFood(this.state.food2.name, this.state.food1.name)
+              }}
+            >
+              Choose {this.state.food2.name}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 }

@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, request, jsonify
 import logging
 import sqlite3
 from flask_cors import CORS
@@ -42,7 +42,10 @@ def get_match():
     }
 
 # Will need to make it so that people can't spam this request
-@app.route('/updateMatch')
+@app.route('/updateMatch', methods=['POST'])
 def update_match():
-    logger.info("received a matchup")
-    return
+    winner = request.json['winner']
+    loser = request.json['loser']
+    logger.warning(f"Winner: {winner}")
+    logger.warning(f"Loser: {loser}")
+    return {"text": "got a winner."}
