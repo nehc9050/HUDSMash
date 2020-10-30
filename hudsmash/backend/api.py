@@ -107,4 +107,4 @@ def update_match():
 
     logger.warning(f"Winner: {winner}")
     logger.warning(f"Loser: {loser}")
-    return redirect(url_for('get_match'))
+    return {"text" : "placeholder"}

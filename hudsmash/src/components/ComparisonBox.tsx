@@ -37,7 +37,7 @@ const comparisonBoxStyle = css`
 
 export class ComparisonBox extends React.Component<{}, IState> {
   async submitFood(winner: string, loser: string):Promise<any> {
-    await(fetch("http://localhost:5000/updateMatch", {
+    fetch("http://localhost:5000/updateMatch", {
       method:  'POST',
       mode: 'cors',
       credentials: 'same-origin',
@@ -45,10 +45,10 @@ export class ComparisonBox extends React.Component<{}, IState> {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({winner: winner, loser: loser}),
-    }));
-    this.setState({timesSubmitted: this.state.timesSubmitted + 1});
-    console.log(this.state);
-    // console.log(response);
+    })
+      .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
+      .then(() => console.log(this.state))
+      .then(() => this.getMatch())
   };
 
   async getMatch() {
