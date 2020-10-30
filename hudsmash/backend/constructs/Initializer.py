@@ -1,5 +1,6 @@
 import random
 import elote as elo
+import constructs.Food
 
 
 class Initializer:

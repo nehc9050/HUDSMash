@@ -1,8 +1,7 @@
 import elote as elo
-from Initializer import Initializer
+from constructs.Initializer import Initializer
 import random
 import math
-import Food
 
 class MatchMaker:
 
