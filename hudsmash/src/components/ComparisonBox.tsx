@@ -3,10 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/core';
 
-// TODO: Skip current matchup
-
-interface IProps {
-}
+// TODO: "Skip current matchup" button
 
 interface IState {
   timesSubmitted: number;
@@ -14,9 +11,9 @@ interface IState {
   food2: foodObject;
 }
 
-interface foodObject {
+export interface foodObject {
   name: string;
-  link: string;
+  link?: string;
   elo: number;
 }
 
