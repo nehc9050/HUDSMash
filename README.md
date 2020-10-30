@@ -4,6 +4,9 @@ This repository contains a very rudimentary mock-up of HUDSMash, a website
 inspired by the Zucc's facemash while he was at Harvard, but with Harvard
 dishes.
 <h2>TODO</h2>
+
+* Fix this TODO (formatting issues)
+
 <h4>Scraper</h4>
 
 * Update scraper to update database.
@@ -23,7 +26,7 @@ dishes.
 * `requirements.txt`
 
 <h3>Scraping</h3>
-The  [scraper.ipynb][scraper.ipynb]  notebook handles scraping HUDS foods.
+The `scraper.ipynb` notebook handles scraping HUDS foods.
 Currently loads a csv of all the Harvard foods into pandas dataframe, prunes it
 so no duplicates are left.
 
