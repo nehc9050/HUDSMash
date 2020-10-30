@@ -9,6 +9,7 @@ interface IProps {
 }
 
 interface IState {
+  timesSubmitted: number;
   food1: foodObject;
   food2: foodObject;
 }
@@ -45,7 +46,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
       },
       body: JSON.stringify({winner: winner, loser: loser}),
     }));
-    // console.log(this.state);
+    this.setState({timesSubmitted: this.state.timesSubmitted + 1});
+    console.log(this.state);
     // console.log(response);
   };
 
@@ -66,6 +68,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
   constructor(props: {}) {
     super(props);
     this.state = {
+      timesSubmitted: 0,
       food1: {
         name: '',
         link: '',
