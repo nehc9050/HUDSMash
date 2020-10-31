@@ -10,6 +10,13 @@ interface IState {
 
 const leaderBoardStyle = css`
   .rankings {
+    display: flex;
+    align-items: center;
+  }
+  #ranklist {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
   }
 `;
 
@@ -17,7 +24,7 @@ export class LeaderBoard extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
     await(fetch("http://localhost:5000/getRankings")).then(res => res.json())
     .then(data => {
-      this.setState({rankings: data});
+      this.setState({rankings: data.foods});
     });
   }
 
@@ -38,13 +45,20 @@ export class LeaderBoard extends React.Component<{}, IState> {
   render() {
     return (
       <div css={leaderBoardStyle}>
-        <ol>
-        {this.state.rankings.map((food: foodObject) => {
-          return (
-            <li> {food.name} (elo: {food.elo}) </li>
-          );
-        })}
-        </ol>
+        <div className='rankings'>
+          <ol id='ranklist'>
+          {this.state.rankings.map((food: foodObject) => {
+            return (
+              <li key={food.name}> {food.name} (elo: {Math.round(food.elo)}) </li>
+            );
+          })}
+          </ol>
+        </div>
+        <button
+          onClick={(event: any) => {this.getRankings()}}
+        >
+          Refresh rankings
+        </button>
       </div>
     );
   }

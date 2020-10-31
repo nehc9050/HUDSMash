@@ -1,6 +1,7 @@
 from flask import Flask, g, request, jsonify, redirect, url_for
 import logging
 import sqlite3
+import json
 from pandas import read_csv
 from flask_cors import CORS
 from constructs.Initializer import Initializer
@@ -108,3 +109,12 @@ def update_match():
     logger.warning(f"Winner: {winner}")
     logger.warning(f"Loser: {loser}")
     return {"text" : "placeholder"}
+
+@app.route('/getRankings')
+def get_rankings():
+    sortedfoods = sorted(
+        [{'name': food.name, 'elo': food.rating} for food in foods],
+        key=lambda x: x['elo'],
+        reverse=True)
+    logger.warning(sortedfoods)
+    return {'foods': sortedfoods}
