@@ -28,9 +28,9 @@ def get_db():
 
 
 def init_foods():
-    global foods 
+    global foods
 
-    df = read_csv('../../data/menu.csv', names = ['Date', 'Meal', 'Food'])
+    df = read_csv('../../data/menu.csv', names = ['Date', 'Meal', 'Food']).head(11)
     foods = Initializer([Food(food) for food in df.Food.tolist()[1:]]).foods
 
 
@@ -101,7 +101,7 @@ def update_match():
         current_matchup[0].beats(current_matchup[1])
     else:
         current_matchup[1].beats(current_matchup[0])
-    
+
     matchups += [current_matchup]
     set_foods_from_matchups(matchups)
 
