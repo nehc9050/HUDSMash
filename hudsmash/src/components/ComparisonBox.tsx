@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { jsx, css } from '@emotion/core';
+import { LeaderBoard } from './LeaderBoard';
 
 // TODO: "Skip current matchup" button
 
@@ -9,6 +10,7 @@ interface IState {
   timesSubmitted: number;
   food1: foodObject;
   food2: foodObject;
+  rankings: ReadonlyArray<foodObject>;
 }
 
 export interface foodObject {
@@ -18,21 +20,31 @@ export interface foodObject {
 }
 
 const comparisonBoxStyle = css`
+  padding-top: 50px;
   .foods {
     display: flex;
-    margin: 50px;
     flex-direction: row;
     align-items: center;
     justify-content: center;
   }
+  .food{
+    margin: 25px;
+  }
   .foodimg {
     height: 200px;
     width: auto;
-    margin: 15px;
+    margin: 10px;
   }
 `;
 
 export class ComparisonBox extends React.Component<{}, IState> {
+  async getRankings():Promise<any> {
+    await(fetch("http://localhost:5000/getRankings")).then(res => res.json())
+    .then(data => {
+      this.setState({rankings: data.foods});
+    });
+  }
+
   async submitFood(winner: string, loser: string):Promise<any> {
     fetch("http://localhost:5000/updateMatch", {
       method:  'POST',
@@ -45,7 +57,10 @@ export class ComparisonBox extends React.Component<{}, IState> {
     })
       .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
       .then(() => console.log(this.state))
-      .then(() => this.getMatch())
+      .then(() => {
+        this.getMatch();
+        this.getRankings();
+      })
   };
 
   async getMatch() {
@@ -60,6 +75,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
 
   async componentDidMount() {
     this.getMatch();
+    this.getRankings();
   }
 
   constructor(props: {}) {
@@ -76,6 +92,10 @@ export class ComparisonBox extends React.Component<{}, IState> {
         link: '',
         elo: 500,
       },
+      rankings: [
+        {'name': 'Sassage', 'elo': 500},
+        {'name': 'Apple pie', 'elo': 500}
+      ],
     }
   }
 
@@ -114,6 +134,19 @@ export class ComparisonBox extends React.Component<{}, IState> {
             </button>
           </div>
         </div>
+        <button
+          onClick={(event: any) => {this.getMatch()}}
+        >
+          Skip this matchup
+        </button>
+        <LeaderBoard
+          {...{rankings: this.state.rankings}}
+        />
+        <button
+          onClick={(event: any) => {this.getRankings()}}
+        >
+          Refresh rankings
+        </button>
       </div>
     )
   }

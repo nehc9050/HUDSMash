@@ -4,6 +4,7 @@ class Food:
 
     def __init__(self, name, elo_competitor=None):
         self.name = name
+        self.link = ''
 
         if elo_competitor:
             self.elo_competitor = elo_competitor
@@ -19,7 +20,7 @@ class Food:
         other.rating = other.elo_competitor.rating
         return {self.name: self.rating, other.name: other.rating}
 
-    
+
     def win_prob_vs(self, other):
         if not self.elo_competitor or not other.elo_competitor:
             raise Exception("Attempted calculation with uninitialized competitor")
@@ -29,5 +30,3 @@ class Food:
 
     def __str__(self):
         return f"{(self.name, self.rating)}"
-
-
