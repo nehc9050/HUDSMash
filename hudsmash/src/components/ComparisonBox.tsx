@@ -3,6 +3,7 @@
 import React from 'react';
 import { jsx, css } from '@emotion/core';
 import { LeaderBoard } from './LeaderBoard';
+import { GenericButton } from './GenericButton';
 
 // TODO: "Skip current matchup" button
 
@@ -24,6 +25,7 @@ const comparisonBoxStyle = css`
   .foods {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
   }
@@ -110,13 +112,13 @@ export class ComparisonBox extends React.Component<{}, IState> {
               className='foodimg'
             />
             <br/>
-            <button
+            <div
               onClick={(event: any) => {
                 this.submitFood(this.state.food1.name, this.state.food2.name)
               }}
             >
-              Choose {this.state.food1.name}
-            </button>
+              <GenericButton text={this.state.food1.name}/>
+            </div>
           </div>
           <div className="food">
             <img
@@ -125,28 +127,28 @@ export class ComparisonBox extends React.Component<{}, IState> {
               className='foodimg'
             />
             <br/>
-            <button
+            <div
               onClick={(event: any) => {
                 this.submitFood(this.state.food2.name, this.state.food1.name)
               }}
             >
-              Choose {this.state.food2.name}
-            </button>
+              <GenericButton text={this.state.food2.name}/>
+            </div>
           </div>
         </div>
-        <button
+        <div
           onClick={(event: any) => {this.getMatch()}}
         >
-          Skip this matchup
-        </button>
+          <GenericButton text="Skip this matchup"/>
+        </div>
         <LeaderBoard
           {...{rankings: this.state.rankings}}
         />
-        <button
+        <div
           onClick={(event: any) => {this.getRankings()}}
         >
-          Refresh rankings
-        </button>
+          <GenericButton text="Refresh rankings"/>
+        </div>
       </div>
     )
   }

@@ -13,6 +13,8 @@ const leaderBoardStyle = css`
     margin-left: auto;
     margin-right: auto;
     text-align: left;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
   }
   .rankings {
     display: flex;
