@@ -41,19 +41,21 @@ const comparisonBoxStyle = css`
 
 export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
-    await(fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/getleaderboard")).then(res => res.json())
+    await(fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
+      method:  'POST',
+      mode: 'cors',
+    })).then(res => res.json())
     .then(data => {
       this.setState({rankings: data.foods});
     });
   }
 
   async submitFood(winner: string, loser: string):Promise<any> {
-    fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/beats", {
+    fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/beats", {
       method:  'POST',
       mode: 'cors',
-      credentials: 'same-origin',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({winner: winner, loser: loser}),
     })
@@ -67,9 +69,13 @@ export class ComparisonBox extends React.Component<{}, IState> {
 
   async getMatch() {
     try {
-      fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
+      fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
         {
           method:  'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         })
         .then(res => res.json()).then(data => {
           this.setState({food1: data.food1, food2: data.food2});
