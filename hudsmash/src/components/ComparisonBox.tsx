@@ -78,7 +78,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
           },
         })
         .then(res => res.json()).then(data => {
-          this.setState({food1: data.food1, food2: data.food2});
+          this.setState({food1: data.food1.displayName, food2: data.food2.displayName});
         });
     } catch (error) {
       console.log(error);
