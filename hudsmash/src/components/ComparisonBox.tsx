@@ -41,14 +41,14 @@ const comparisonBoxStyle = css`
 
 export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
-    await(fetch("http://localhost:5000/getRankings")).then(res => res.json())
+    await(fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/getleaderboard")).then(res => res.json())
     .then(data => {
       this.setState({rankings: data.foods});
     });
   }
 
   async submitFood(winner: string, loser: string):Promise<any> {
-    fetch("http://localhost:5000/updateMatch", {
+    fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/beats", {
       method:  'POST',
       mode: 'cors',
       credentials: 'same-origin',
@@ -67,9 +67,13 @@ export class ComparisonBox extends React.Component<{}, IState> {
 
   async getMatch() {
     try {
-      fetch("http://localhost:5000/getMatch").then(res => res.json()).then(data => {
-        this.setState({food1: data.food1, food2: data.food2});
-      });
+      fetch("https://0wloozydpk.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
+        {
+          method:  'POST',
+        })
+        .then(res => res.json()).then(data => {
+          this.setState({food1: data.food1, food2: data.food2});
+        });
     } catch (error) {
       console.log(error);
     }
