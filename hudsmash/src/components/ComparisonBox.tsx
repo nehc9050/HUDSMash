@@ -15,61 +15,70 @@ interface IState {
 }
 
 export interface foodObject {
+  score: number;
+  displayName: string;
+  leaderboardHelper?: number;
   name: string;
-  link?: string;
-  elo: number;
+  image?: string;
+  locked?: boolean;
 }
 
 const comparisonBoxStyle = css`
   padding-top: 50px;
   .foods {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
   }
-  .food{
+  .food {
     margin: 25px;
   }
   .foodimg {
     height: 200px;
     width: auto;
+    border-radius: 10px;
     margin: 10px;
+  }
+  .column {
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 50%;
   }
 `;
 
 export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
-    await(fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
+    await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
       method:  'POST',
       mode: 'cors',
     })).then(res => res.json())
     .then(data => {
-      this.setState({rankings: data.foods});
+      console.log(data);
+      this.setState({rankings: data});
     });
   }
 
   async submitFood(winner: string, loser: string):Promise<any> {
-    fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/beats", {
-      method:  'POST',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({winner: winner, loser: loser}),
-    })
+    await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/beats", {
+        method:  'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({winner: winner, loser: loser}),
+      })
       .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
       .then(() => console.log(this.state))
       .then(() => {
         this.getMatch();
-        this.getRankings();
-      })
+        // this.getRankings();
+    }));
   };
 
   async getMatch() {
     try {
-      fetch("https://c8wf5rsmie.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
+      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
         {
           method:  'POST',
           mode: 'cors',
@@ -78,8 +87,14 @@ export class ComparisonBox extends React.Component<{}, IState> {
           },
         })
         .then(res => res.json()).then(data => {
-          this.setState({food1: data.food1.displayName, food2: data.food2.displayName});
-        });
+          console.log(data);
+          this.setState(
+            {
+              food1: data.first,
+              food2: data.second
+            }
+          );
+        }));
     } catch (error) {
       console.log(error);
     }
@@ -95,18 +110,20 @@ export class ComparisonBox extends React.Component<{}, IState> {
     this.state = {
       timesSubmitted: 0,
       food1: {
+        displayName: '',
+        image: '',
         name: '',
-        link: '',
-        elo: 500,
+        score: 500,
       },
       food2: {
+        displayName: '',
+        image: '',
         name: '',
-        link: '',
-        elo: 500,
+        score: 500,
       },
       rankings: [
-        {'name': 'Sassage', 'elo': 500},
-        {'name': 'Apple pie', 'elo': 500}
+        {'displayName': 'Sassage', 'name': 'sassage', 'score': 500},
+        {'displayName': 'Apple pie', 'name': 'applePie', 'score': 500}
       ],
     }
   }
@@ -115,34 +132,41 @@ export class ComparisonBox extends React.Component<{}, IState> {
     return (
       <div css={comparisonBoxStyle}>
         <div className="foods">
-          <div className="food">
-            <img
-              src={this.state.food1.link}
-              alt={this.state.food1.name}
-              className='foodimg'
-            />
-            <br/>
-            <div
-              onClick={(event: any) => {
-                this.submitFood(this.state.food1.name, this.state.food2.name)
-              }}
-            >
-              <GenericButton text={this.state.food1.name}/>
+          <div className="row">
+            <div className="food">
+              <img
+                src={this.state.food1.image}
+                alt={this.state.food1.displayName}
+                className='foodimg'
+              />
+              <div>
+                <div
+                  onClick={(event: any) => {
+                    this.submitFood(this.state.food1.name, this.state.food2.name)
+                  }}
+                >
+                  <GenericButton text={this.state.food1.displayName}/>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="food">
-            <img
-              src={this.state.food2.link}
-              alt={this.state.food2.name}
-              className='foodimg'
-            />
-            <br/>
-            <div
-              onClick={(event: any) => {
-                this.submitFood(this.state.food2.name, this.state.food1.name)
-              }}
-            >
-              <GenericButton text={this.state.food2.name}/>
+
+          <div className="row">
+            <div className="food">
+              <img
+                src={this.state.food2.image}
+                alt={this.state.food2.image}
+                className='foodimg'
+              />
+              <div>
+                <div
+                  onClick={(event: any) => {
+                    this.submitFood(this.state.food2.name, this.state.food1.name)
+                  }}
+                >
+                  <GenericButton text={this.state.food2.displayName}/>
+                </div>
+              </div>
             </div>
           </div>
         </div>

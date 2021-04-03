@@ -30,7 +30,7 @@ export class LeaderBoard extends React.Component<IProps, {}> {
           <ol id='ranklist'>
           {this.props.rankings.map((food: foodObject) => {
             return (
-              <li key={food.name}> {food.name} (elo: {Math.round(food.elo)}) </li>
+              <li key={food.displayName}> {food.displayName} (elo: {Math.round(food.score)}) </li>
             );
           })}
           </ol>

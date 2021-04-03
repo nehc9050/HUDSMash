@@ -23,6 +23,7 @@ const buttonStyle = css`
     cursor: pointer;
     transition-duration: 0.3s;
     max-width: 200px;
+    min-width: 50px;
   }
 
   button:hover {
