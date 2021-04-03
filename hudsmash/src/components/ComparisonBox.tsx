@@ -4,6 +4,7 @@ import React from 'react';
 import { jsx, css } from '@emotion/core';
 import { LeaderBoard } from './LeaderBoard';
 import { GenericButton } from './GenericButton';
+import ReactLoading from 'react-loading';
 
 // TODO: "Skip current matchup" button
 
@@ -12,6 +13,8 @@ interface IState {
   food1: foodObject;
   food2: foodObject;
   rankings: ReadonlyArray<foodObject>;
+  loading: boolean;
+  loadingRanks: boolean;
 }
 
 export interface foodObject {
@@ -45,39 +48,63 @@ const comparisonBoxStyle = css`
     flex-wrap: wrap;
     width: 50%;
   }
+  .loading {
+    margin: 130px;
+  }
+  .loadingRanks {
+    margin-left: 48%;
+    margin-right: 48%;
+    margin-top: 84px;
+    margin-bottom: 84px;
+  }
 `;
 
 export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
-    await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
-      method:  'POST',
-      mode: 'cors',
-    })).then(res => res.json())
-    .then(data => {
-      console.log(data);
-      this.setState({rankings: data});
-    });
+    try {
+      this.setState({ loadingRanks: true });
+      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
+        method:  'POST',
+        mode: 'cors',
+      })).then(res => res.json())
+      .then(data => {
+        console.log(data);
+        this.setState({ rankings: data });
+        this.setState({ loadingRanks: false });
+      });
+    } catch (error) {
+      this.setState({ loadingRanks: false });
+      console.log("Error on getRankings encountered");
+    }
   }
 
   async submitFood(winner: string, loser: string):Promise<any> {
-    await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/beats", {
-        method:  'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({winner: winner, loser: loser}),
-      })
-      .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
-      .then(() => console.log(this.state))
-      .then(() => {
-        this.getMatch();
-        // this.getRankings();
-    }));
+    try {
+      this.setState({ loading: true });
+      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/beats", {
+          method:  'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({winner: winner, loser: loser}),
+        })
+        .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
+        // .then(() => console.log(this.state))
+        .then(() => {
+          this.getMatch();
+          // this.getRankings();
+      }));
+    } catch (error) {
+      this.setState({ loading: false });
+      console.log("Error on submitFood encountered");
+      this.submitFood(winner, loser);
+    }
   };
 
   async getMatch() {
     try {
+      this.setState({ loading: true });
       await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
         {
           method:  'POST',
@@ -94,15 +121,41 @@ export class ComparisonBox extends React.Component<{}, IState> {
               food2: data.second
             }
           );
+          this.setState({ loading: false });
         }));
     } catch (error) {
-      console.log(error);
+      console.log("Error on getMatch encountered");
+      // console.log(error);
+      this.getMatch();
     }
   }
 
   async componentDidMount() {
     this.getMatch();
     this.getRankings();
+  }
+
+  handleImageError(img: number) {
+    console.log("image error");
+    if (img === 0) {
+      this.setState({
+        food1: {
+          displayName: this.state.food1.displayName,
+          score: this.state.food1.score,
+          image: "https://en.meming.world/images/en/b/bc/Mike_Wazowski-Sulley_Face_Swap.jpg",
+          name: this.state.food1.name,
+        }
+      });
+    } else {
+      this.setState({
+        food2: {
+          displayName: this.state.food2.displayName,
+          score: this.state.food2.score,
+          image: "https://en.meming.world/images/en/b/bc/Mike_Wazowski-Sulley_Face_Swap.jpg",
+          name: this.state.food2.name,
+        }
+      });
+    }
   }
 
   constructor(props: {}) {
@@ -125,6 +178,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
         {'displayName': 'Sassage', 'name': 'sassage', 'score': 500},
         {'displayName': 'Apple pie', 'name': 'applePie', 'score': 500}
       ],
+      loading: false,
+      loadingRanks: false,
     }
   }
 
@@ -133,41 +188,55 @@ export class ComparisonBox extends React.Component<{}, IState> {
       <div css={comparisonBoxStyle}>
         <div className="foods">
           <div className="row">
-            <div className="food">
-              <img
-                src={this.state.food1.image}
-                alt={this.state.food1.displayName}
-                className='foodimg'
-              />
-              <div>
-                <div
-                  onClick={(event: any) => {
-                    this.submitFood(this.state.food1.name, this.state.food2.name)
-                  }}
-                >
-                  <GenericButton text={this.state.food1.displayName}/>
+            {
+              this.state.loading ?
+                <div className="loading">
+                  <ReactLoading type={"bubbles"} color={"rgb(226, 52, 50)"} height={50} width={50}/>
+                </div> :
+                <div className="food">
+                  <img
+                    src={this.state.food1.image}
+                    alt={this.state.food1.displayName}
+                    className='foodimg'
+                    onError={() => this.handleImageError(0)}
+                  />
+                  <div>
+                    <div
+                      onClick={(event: any) => {
+                        this.submitFood(this.state.food1.name, this.state.food2.name)
+                      }}
+                    >
+                      <GenericButton text={this.state.food1.displayName}/>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+            }
           </div>
 
           <div className="row">
-            <div className="food">
-              <img
-                src={this.state.food2.image}
-                alt={this.state.food2.image}
-                className='foodimg'
-              />
-              <div>
-                <div
-                  onClick={(event: any) => {
-                    this.submitFood(this.state.food2.name, this.state.food1.name)
-                  }}
-                >
-                  <GenericButton text={this.state.food2.displayName}/>
+            {
+              this.state.loading ?
+                <div className="loading">
+                  <ReactLoading type={"bubbles"} color={"rgb(226, 52, 50)"} height={50} width={50}/>
+                </div> :
+                <div className="food">
+                  <img
+                    src={this.state.food2.image}
+                    alt={this.state.food2.image}
+                    className='foodimg'
+                    onError={() => this.handleImageError(1)}
+                  />
+                  <div>
+                    <div
+                      onClick={(event: any) => {
+                        this.submitFood(this.state.food2.name, this.state.food1.name)
+                      }}
+                    >
+                      <GenericButton text={this.state.food2.displayName}/>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
+            }
           </div>
         </div>
         <div
@@ -175,9 +244,15 @@ export class ComparisonBox extends React.Component<{}, IState> {
         >
           <GenericButton text="Skip this matchup"/>
         </div>
-        <LeaderBoard
-          {...{rankings: this.state.rankings}}
-        />
+        {
+          this.state.loadingRanks ?
+            <div className="loadingRanks">
+              <ReactLoading type={"bubbles"} color={"rgb(226, 52, 50)"} height={50} width={50}/>
+            </div> :
+            <LeaderBoard
+              {...{rankings: this.state.rankings}}
+            />
+        }
         <div
           onClick={(event: any) => {this.getRankings()}}
         >
