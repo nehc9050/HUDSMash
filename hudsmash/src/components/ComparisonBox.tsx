@@ -63,7 +63,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
     try {
       this.setState({ loadingRanks: true });
-      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getleaderboard", {
+      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/getleaderboard", {
+      // await(fetch("http://127.0.0.1:5000/getRankings", {
         method:  'POST',
         mode: 'cors',
       })).then(res => res.json())
@@ -81,7 +82,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
   async submitFood(winner: string, loser: string):Promise<any> {
     try {
       this.setState({ loading: true });
-      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/beats", {
+      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/beats", {
+      // await(fetch("http://127.0.0.1:5000/updateMatch", {
           method:  'POST',
           mode: 'cors',
           headers: {
@@ -105,7 +107,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
   async getMatch() {
     try {
       this.setState({ loading: true });
-      await(fetch("https://uu9smuiu4d.execute-api.us-east-1.amazonaws.com/demo/getfoodpair",
+      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/getfoodpair",
+      // await(fetch("http://127.0.0.1:5000/getMatch",
         {
           method:  'POST',
           mode: 'cors',
