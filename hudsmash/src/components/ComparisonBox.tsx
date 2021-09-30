@@ -15,6 +15,7 @@ interface IState {
   rankings: ReadonlyArray<foodObject>;
   loading: boolean;
   loadingRanks: boolean;
+  requestId: string;
 }
 
 export interface foodObject {
@@ -63,7 +64,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
   async getRankings():Promise<any> {
     try {
       this.setState({ loadingRanks: true });
-      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/getleaderboard", {
+      await(fetch("https://j4ldrj5h4f.execute-api.us-east-2.amazonaws.com/prod/getleaderboard", {
       // await(fetch("http://127.0.0.1:5000/getRankings", {
         method:  'POST',
         mode: 'cors',
@@ -79,17 +80,17 @@ export class ComparisonBox extends React.Component<{}, IState> {
     }
   }
 
-  async submitFood(winner: string, loser: string):Promise<any> {
+  async submitFood(winner: string, loser: string, requestId: string):Promise<any> {
     try {
       this.setState({ loading: true });
-      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/beats", {
+      await(fetch("https://j4ldrj5h4f.execute-api.us-east-2.amazonaws.com/prod/beats", {
       // await(fetch("http://127.0.0.1:5000/updateMatch", {
           method:  'POST',
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({winner: winner, loser: loser}),
+          body: JSON.stringify({winner: winner, loser: loser, requestId: requestId}),
         })
         .then(() => this.setState({timesSubmitted: this.state.timesSubmitted + 1}))
         // .then(() => console.log(this.state))
@@ -100,14 +101,14 @@ export class ComparisonBox extends React.Component<{}, IState> {
     } catch (error) {
       this.setState({ loading: false });
       console.log("Error on submitFood encountered");
-      this.submitFood(winner, loser);
+      this.submitFood(winner, loser, requestId);
     }
   };
 
   async getMatch() {
     try {
       this.setState({ loading: true });
-      await(fetch("https://xwgfrx4f15.execute-api.us-east-2.amazonaws.com/prod/getfoodpair",
+      await(fetch("https://j4ldrj5h4f.execute-api.us-east-2.amazonaws.com/prod/getfoodpair",
       // await(fetch("http://127.0.0.1:5000/getMatch",
         {
           method:  'POST',
@@ -121,7 +122,8 @@ export class ComparisonBox extends React.Component<{}, IState> {
           this.setState(
             {
               food1: data.first,
-              food2: data.second
+              food2: data.second,
+              requestId: data.requestId
             }
           );
           this.setState({ loading: false });
@@ -183,6 +185,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
       ],
       loading: false,
       loadingRanks: false,
+      requestId: "",
     }
   }
 
@@ -206,7 +209,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
                   <div>
                     <div
                       onClick={(event: any) => {
-                        this.submitFood(this.state.food1.name, this.state.food2.name)
+                        this.submitFood(this.state.food1.name, this.state.food2.name, this.state.requestId)
                       }}
                     >
                       <GenericButton text={this.state.food1.displayName}/>
@@ -232,7 +235,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
                   <div>
                     <div
                       onClick={(event: any) => {
-                        this.submitFood(this.state.food2.name, this.state.food1.name)
+                        this.submitFood(this.state.food2.name, this.state.food1.name, this.state.requestId)
                       }}
                     >
                       <GenericButton text={this.state.food2.displayName}/>
