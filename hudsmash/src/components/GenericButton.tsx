@@ -7,31 +7,31 @@ interface IProps {
 }
 
 const buttonStyle = css`
-  @font-face {
-    font-family: 'Roboto Mono', monospace;
-    src: url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-  }
-
   button {
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Roboto Mono', monospace;
-    background-color: white;
-    padding: 5px;
-    border: none;
-    box-shadow: 0 3px 4px 0 rgba(0,0,0,0.24), 0 1px 1px 0 rgba(0,0,0,0.19);
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+    font-size: 36px;
+    font-family: Poppins;
+    background-color: #E23432;
+    height: 58px;
+    line-height: 58px;
+    width: 410px;
+    color: white;
+    border: 5px solid #A50A0E;
+    border-radius: 10px;
+    box-sizing: border-box;
     cursor: pointer;
     transition-duration: 0.3s;
-    max-width: 200px;
-    min-width: 50px;
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
 
   button:hover {
     cursor: pointer;
     transition-duration: 0.3s;
-    box-shadow: 0 6px 8px 0 rgba(0,0,0,0.24), 0 3px 3px 0 rgba(0,0,0,0.19);
-    background: rgb(226, 52, 50);
-    color: white;
+    background: white;
+    color: black;
   }
 `;
 
