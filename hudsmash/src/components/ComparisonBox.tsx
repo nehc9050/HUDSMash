@@ -34,7 +34,12 @@ export interface foodGroup {
 }
 
 const comparisonBoxStyle = css`
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+  display: flex;
+  flex-direction: column;
   padding-top: 50px;
+  align-items: center;
+  justify-content: center;
   .foods {
     display: flex;
     flex-wrap: wrap;
@@ -42,7 +47,6 @@ const comparisonBoxStyle = css`
     justify-content: center;
   }
   .food {
-    margin: 25px;
   }
   .column {
     flex-direction: column;
@@ -57,6 +61,9 @@ const comparisonBoxStyle = css`
     margin-right: 48%;
     margin-top: 84px;
     margin-bottom: 84px;
+  }
+  #skipButton {
+    align-self: center;
   }
 `;
 
@@ -167,6 +174,17 @@ export class ComparisonBox extends React.Component<{}, IState> {
   }
 
   render() {
+    /*
+      <div>
+        <div
+          onClick={(event: any) => {
+            this.submitFood(true);
+          }}
+        >
+          <GenericButton text={this.state.foods[0].first.displayName}/>
+        </div>
+      </div>
+     */
     return (
       <div css={comparisonBoxStyle}>
         <div className="foods">
@@ -181,15 +199,6 @@ export class ComparisonBox extends React.Component<{}, IState> {
                     src={this.state.foods[0].first.image}
                     key={this.state.foods[0].first.image}
                   />
-                  <div>
-                    <div
-                      onClick={(event: any) => {
-                        this.submitFood(true);
-                      }}
-                    >
-                      <GenericButton text={this.state.foods[0].first.displayName}/>
-                    </div>
-                  </div>
                 </div>
             }
           </div>
@@ -205,20 +214,11 @@ export class ComparisonBox extends React.Component<{}, IState> {
                     src={this.state.foods[0].second.image}
                     key={this.state.foods[0].second.image}
                   />
-                  <div>
-                    <div
-                      onClick={(event: any) => {
-                        this.submitFood(false);
-                      }}
-                    >
-                      <GenericButton text={this.state.foods[0].second.displayName}/>
-                    </div>
-                  </div>
                 </div>
             }
           </div>
         </div>
-        <div onClick={(event: any) => {this.skip()}}>
+        <div id="skipButton" onClick={(event: any) => {this.skip()}}>
           <GenericButton text="Skip this matchup"/>
         </div>
         {
@@ -230,11 +230,6 @@ export class ComparisonBox extends React.Component<{}, IState> {
               {...{rankings: this.state.rankings}}
             />
         }
-        <div
-          onClick={(event: any) => {this.getRankings()}}
-        >
-          <GenericButton text="Refresh rankings"/>
-        </div>
       </div>
     )
   }

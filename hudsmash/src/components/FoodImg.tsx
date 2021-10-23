@@ -15,10 +15,9 @@ interface IState {
 
 const foodImgStyle = css`
   .foodimg {
-    height: 200px;
-    width: auto;
-    border-radius: 10px;
-    margin: 10px;
+    height: 300px;
+    width: 300px;
+    object-fit: cover;
   }
 `;
 

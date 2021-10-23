@@ -8,13 +8,13 @@ interface IProps {
 
 const buttonStyle = css`
   button {
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-    font-size: 36px;
+    font-size: 21px;
     font-family: Poppins;
+    font-weight: 700;
     background-color: #E23432;
-    height: 58px;
-    line-height: 58px;
-    width: 410px;
+    height: 43px;
+    line-height: 43px;
+    width: 250px;
     color: white;
     border: 5px solid #A50A0E;
     border-radius: 10px;
