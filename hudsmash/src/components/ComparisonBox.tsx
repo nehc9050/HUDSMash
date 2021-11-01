@@ -45,6 +45,8 @@ const comparisonBoxStyle = css`
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 25px;
   }
   .food {
   }
@@ -197,6 +199,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
                 <div className="food">
                   <FoodImg
                     src={this.state.foods[0].first.image}
+                    rounded={3}
                     key={this.state.foods[0].first.image}
                   />
                 </div>
@@ -212,6 +215,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
                 <div className="food">
                   <FoodImg
                     src={this.state.foods[0].second.image}
+                    rounded={1}
                     key={this.state.foods[0].second.image}
                   />
                 </div>
