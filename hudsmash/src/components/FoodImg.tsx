@@ -26,20 +26,20 @@ export class FoodImg extends React.Component<IProps, IState> {
       border: 4px solid #A50A0E;
       box-sizing: border-box;
       ${this.props.rounded === 0 && `
-        border-radius: 10px 10px 0px 0px;
-        border-bottom: 2px;
+        border-radius: 0px 0px 10px 10px;
+        border-top: 2px solid #A50A0E;
       `}
       ${this.props.rounded === 1 && `
         border-radius: 0px 10px 10px 0px;
-        border-left: 2px;
+        border-left: 2px solid #A50A0E;
       `}
       ${this.props.rounded === 2 && `
-        border-radius: 0px 0px 10px 10px;
-        border-top: 2px;
+        border-radius: 10px 10px 0px 0px;
+        border-bottom: 2px solid #A50A0E;
       `}
       ${this.props.rounded === 3 && `
         border-radius: 10px 0px 0px 10px;
-        border-right: 2px;
+        border-right: 2px solid #A50A0E;
       `}
   `;
   }

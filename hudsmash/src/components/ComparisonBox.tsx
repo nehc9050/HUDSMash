@@ -16,6 +16,7 @@ interface IState {
   loading: boolean;
   loadingRanks: boolean;
   requestIds: Array<string>;
+  imgMode: number;
 }
 
 export interface foodObject {
@@ -47,6 +48,7 @@ const comparisonBoxStyle = css`
     justify-content: center;
     margin-top: 50px;
     margin-bottom: 25px;
+    position: relative;
   }
   .food {
   }
@@ -66,6 +68,25 @@ const comparisonBoxStyle = css`
   }
   #skipButton {
     align-self: center;
+  }
+  #vsCircle {
+    width: 105px;
+    height: 105px;
+
+    background: #E23432;
+    border: 5px solid #A50A0E;
+    box-sizing: border-box;
+    border-radius: 50%;
+    position: absolute;
+
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 48px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: #FFFFFF;
   }
 `;
 
@@ -149,6 +170,17 @@ export class ComparisonBox extends React.Component<{}, IState> {
   async componentDidMount() {
     this.getMatch();
     this.getRankings();
+    this.adjustImgs();
+    window.addEventListener('resize', this.adjustImgs.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.adjustImgs.bind(this));
+  }
+
+  adjustImgs() {
+    this.setState({ imgMode: window.innerWidth < 948 ? 0 : 1 });
+    console.log("changed size");
   }
 
   skip() {
@@ -172,6 +204,7 @@ export class ComparisonBox extends React.Component<{}, IState> {
       loading: true,
       loadingRanks: false,
       requestIds: [],
+      imgMode: window.innerWidth <= 950 ? 0 : 1,
     }
   }
 
@@ -199,13 +232,12 @@ export class ComparisonBox extends React.Component<{}, IState> {
                 <div className="food">
                   <FoodImg
                     src={this.state.foods[0].first.image}
-                    rounded={3}
+                    rounded={this.state.imgMode + 2}
                     key={this.state.foods[0].first.image}
                   />
                 </div>
             }
           </div>
-
           <div className="row">
             {
               this.state.loading ?
@@ -215,12 +247,19 @@ export class ComparisonBox extends React.Component<{}, IState> {
                 <div className="food">
                   <FoodImg
                     src={this.state.foods[0].second.image}
-                    rounded={1}
+                    rounded={this.state.imgMode}
                     key={this.state.foods[0].second.image}
                   />
                 </div>
             }
           </div>
+          {
+            !this.state.loading ?
+              <div id="vsCircle">
+                VS
+              </div> :
+              <div></div>
+          }
         </div>
         <div id="skipButton" onClick={(event: any) => {this.skip()}}>
           <GenericButton text="Skip this matchup"/>
